@@ -1,4 +1,4 @@
-// Main Application - BirdBird 2.6 - Fixed and Optimized
+// Main Application - BirdBird 2.6 - Fixed with Proper Ads Setup
 class BirdBirdGame {
   constructor() {
     this.gameEngine = null;
@@ -38,7 +38,7 @@ class BirdBirdGame {
       this.setupGameEvents();
       
       // Setup ads with improved error handling
-      // this.setupAds(); // Temporarily disabled
+      this.setupAds();
       
       console.log('BirdBird 2.6 initialized successfully');
       
@@ -75,70 +75,94 @@ class BirdBirdGame {
   setupAds() {
     // Setup Adsterra ads with improved error handling
     try {
-      this.loadAdsterraAd('adsterra-top');
-      
-      // Add more ad placements with delay to prevent conflicts
-      setTimeout(() => {
-        this.loadAdsterraAd('adsterra-left');
-        this.loadAdsterraAd('adsterra-right');
-        this.loadAdsterraAd('adsterra-bottom');
-      }, 1000);
+      // Wait for the page to fully load before loading ads
+      if (document.readyState === 'complete') {
+        this.loadAdsterraAd('adsterra-top', 468, 60);
+        setTimeout(() => {
+          this.loadAdsterraAd('adsterra-left', 160, 600);
+          this.loadAdsterraAd('adsterra-right', 160, 600);
+          this.loadAdsterraAd('adsterra-bottom', 468, 60);
+        }, 1000);
+      } else {
+        window.addEventListener('load', () => {
+          this.loadAdsterraAd('adsterra-top', 468, 60);
+          setTimeout(() => {
+            this.loadAdsterraAd('adsterra-left', 160, 600);
+            this.loadAdsterraAd('adsterra-right', 160, 600);
+            this.loadAdsterraAd('adsterra-bottom', 468, 60);
+          }, 1000);
+        });
+      }
     } catch (error) {
       console.warn('Failed to setup ads:', error);
     }
   }
   
-  loadAdsterraAd(containerId) {
+  loadAdsterraAd(containerId, width, height) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
     try {
-      // Create a unique ad container with better structure
-      const adId = `ad-${containerId}-${Date.now()}`;
+      // Clear previous content
+      container.innerHTML = '';
       
-      // Replace placeholder with actual Adsterra ad code
-      container.innerHTML = `
-        <div id="${adId}" style="text-align: center; margin: 10px 0; min-height: 60px;">
-          <div class="ad-content">
-            <!-- Adsterra Ad Code -->
-            <script type="text/javascript">
-              (function() {
-                try {
-                  var atOptions = {
-                    'key' : '2c9e3e07b7fa2238b26a25f1085e6e26',
-                    'format' : 'iframe',
-                    'height' : 60,
-                    'width' : 468,
-                    'params' : {}
-                  };
-                  
-                  var script = document.createElement('script');
-                  script.type = 'text/javascript';
-                  script.src = '//www.highperformanceformat.com/2c9e3e07b7fa2238b26a25f1085e6e26/invoke.js';
-                  script.onerror = function() {
-                    console.warn('Failed to load Adsterra script for ${containerId}');
-                  };
-                  document.head.appendChild(script);
-                } catch (e) {
-                  console.warn('Error setting up ad for ${containerId}:', e);
-                }
-              })();
-            </script>
-          </div>
-          <noscript>
-            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; color: var(--text-muted); border: 1px dashed var(--border-color);">
-              Advertisement (JavaScript required)
-            </div>
-          </noscript>
+      // Create proper ad container
+      const adDiv = document.createElement('div');
+      adDiv.id = `ad-${containerId}`;
+      adDiv.style.width = `${width}px`;
+      adDiv.style.height = `${height}px`;
+      adDiv.style.margin = '0 auto';
+      adDiv.style.textAlign = 'center';
+      
+      // Add loading indicator
+      adDiv.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
+          <div>Loading advertisement...</div>
         </div>
       `;
+      
+      container.appendChild(adDiv);
+      
+      // Load Adsterra ad after a short delay
+      setTimeout(() => {
+        try {
+          const atOptions = {
+            'key' : '2c9e3e07b7fa2238b26a25f1085e6e26',
+            'format' : 'iframe',
+            'height' : height,
+            'width' : width,
+            'params' : {}
+          };
+          
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = '//www.highperformanceformat.com/2c9e3e07b7fa2238b26a25f1085e6e26/invoke.js';
+          
+          script.onload = function() {
+            console.log(`Ad loaded for ${containerId}`);
+          };
+          
+          script.onerror = function() {
+            console.warn(`Failed to load Adsterra script for ${containerId}`);
+            adDiv.innerHTML = `
+              <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; color: var(--text-muted); border: 1px dashed var(--border-color); text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+                <div>Advertisement placeholder<br>(Size: ${width}x${height})</div>
+              </div>
+            `;
+          };
+          
+          document.head.appendChild(script);
+        } catch (e) {
+          console.warn(`Error setting up ad for ${containerId}:`, e);
+        }
+      }, 2000);
       
     } catch (e) {
       console.warn('Failed to load ad for', containerId, e);
       // Fallback to styled placeholder
       container.innerHTML = `
-        <div style="background: var(--bg-tertiary); border: 2px dashed var(--border-color); border-radius: 10px; padding: 1rem; text-align: center; color: var(--text-muted); min-height: 60px; display: flex; align-items: center; justify-content: center;">
-          <span>Advertisement Space - ${containerId.replace('adsterra-', '').replace('-', ' ').toUpperCase()}</span>
+        <div style="background: var(--bg-tertiary); border: 2px dashed var(--border-color); border-radius: 10px; padding: 1rem; text-align: center; color: var(--text-muted); height: ${height}px; display: flex; align-items: center; justify-content: center;">
+          <span>Advertisement Space - ${containerId.replace('adsterra-', '').toUpperCase()}<br>(${width}x${height})</span>
         </div>
       `;
     }

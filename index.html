@@ -9,11 +9,22 @@
   <meta name="theme-color" content="#1a1a2e">
   <meta name="description" content="Play BirdBird 2.6 - The ultimate Flappy Bird experience with enhanced graphics and smooth gameplay on all devices">
   <title>BirdBird 2.6 — The Sky is the Limit!</title>
-  
-  <!-- Preload critical assets -->
-  <link rel="preload" href="assets/images/bird.png" as="image">
-  <link rel="preload" href="assets/images/pipe1.png" as="image">
-  <link rel="preload" href="assets/images/background2.png" as="image">
+
+<!-- Scripts - Correct Paths -->
+<script src="js/game-config.js"></script>
+<script src="js/audio-manager.js"></script>
+<script src="js/leaderboard.js"></script>
+<script src="js/game-engine.js"></script>
+<script src="js/ui-manager.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Preload assets - Correct Paths -->
+<link rel="preload" href="assets/images/bird.png" as="image">
+<link rel="preload" href="assets/images/pipe1.png" as="image">
+<link rel="preload" href="assets/images/background2.png" as="image">
+
+<!-- Manifest - Correct Path -->
+<link rel="manifest" href="manifest.json">
   
   <style>
     /* CSS Variables - Dark Theme */
@@ -972,15 +983,19 @@
   <main class="main">
     <div class="container">
       <!-- Top Advertisement -->
-      <div class="ad-container ad-top" id="adsterra-top">
-        <span>Advertisement Space - TOP</span>
+      <div class="ad-container ad-top" id="adsterra-top" style="min-height: 90px;">
+        <div class="ad-content">
+          <!-- Adsterra Ad Code will be inserted here -->
+        </div>
       </div>
 
       <!-- Game Section -->
       <section class="game-section">
         <!-- Left Advertisement -->
-        <div class="ad-container ad-side" id="adsterra-left">
-          <span>Advertisement<br>Space - LEFT</span>
+        <div class="ad-container ad-side" id="adsterra-left" style="min-height: 600px; width: 160px;">
+          <div class="ad-content">
+            <!-- Adsterra Ad Code will be inserted here -->
+          </div>
         </div>
 
         <!-- Game Container -->
@@ -1080,14 +1095,18 @@
         </div>
 
         <!-- Right Advertisement -->
-        <div class="ad-container ad-side" id="adsterra-right">
-          <span>Advertisement<br>Space - RIGHT</span>
+        <div class="ad-container ad-side" id="adsterra-right" style="min-height: 600px; width: 160px;">
+          <div class="ad-content">
+            <!-- Adsterra Ad Code will be inserted here -->
+          </div>
         </div>
       </section>
 
       <!-- Bottom Advertisement -->
-      <div class="ad-container ad-bottom" id="adsterra-bottom">
-        <span>Advertisement Space - BOTTOM</span>
+      <div class="ad-container ad-bottom" id="adsterra-bottom" style="min-height: 90px;">
+        <div class="ad-content">
+          <!-- Adsterra Ad Code will be inserted here -->
+        </div>
       </div>
 
       <!-- Leaderboard Section -->
@@ -1121,13 +1140,5 @@
       </section>
     </div>
   </main>
-
-  <!-- Scripts - CORRECT ORDER -->
-<script src="js/game-config.js"></script>
-<script src="js/audio-manager.js"></script>
-<script src="js/leaderboard.js"></script>
-<script src="js/game-engine.js"></script>
-<script src="js/ui-manager.js"></script>
-<script src="js/main.js"></script>
 </body>
 </html>
